@@ -1,0 +1,472 @@
+<title>Market Validation</title>
+<style>
+  :root {
+    --paper: #F6F3EA;
+    --paper-raised: #FFFFFF;
+    --ink: #1C2420;
+    --ink-soft: #52605A;
+    --ink-faint: #7C8880;
+    --rule: #DCD5C1;
+    --jade: #0E6E63;
+    --jade-soft: #E3EFEA;
+    --amber: #A56A0A;
+    --amber-soft: #F5EAD6;
+    --risk: #A6362C;
+    --risk-soft: #F5E4E1;
+    --good: #2E6B45;
+    --good-soft: #E4EFE6;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12201C;
+      --paper-raised: #182E28;
+      --ink: #EDEAE0;
+      --ink-soft: #B7C2BB;
+      --ink-faint: #7E8C85;
+      --rule: #2C433C;
+      --jade: #53D9C4;
+      --jade-soft: #1B3833;
+      --amber: #E3AC53;
+      --amber-soft: #392C15;
+      --risk: #E8837A;
+      --risk-soft: #3A211E;
+      --good: #6FC98A;
+      --good-soft: #1D3323;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12201C;
+    --paper-raised: #182E28;
+    --ink: #EDEAE0;
+    --ink-soft: #B7C2BB;
+    --ink-faint: #7E8C85;
+    --rule: #2C433C;
+    --jade: #53D9C4;
+    --jade-soft: #1B3833;
+    --amber: #E3AC53;
+    --amber-soft: #392C15;
+    --risk: #E8837A;
+    --risk-soft: #3A211E;
+    --good: #6FC98A;
+    --good-soft: #1D3323;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+    padding-inline: 20px;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: var(--jade); }
+
+  /* ---- confidentiality strip ---- */
+  .confid {
+    display: flex; align-items: center; gap: 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber); background: var(--amber-soft);
+    border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+    border-radius: 999px; padding: 5px 12px; width: fit-content;
+    margin-top: 24px;
+  }
+  .confid svg { width: 12px; height: 12px; flex: none; }
+
+  /* ---- header ---- */
+  header { padding-block: 18px 28px; border-bottom: 1px solid var(--rule); }
+  h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 600; margin-top: 12px; }
+  .subtitle { color: var(--ink-soft); font-size: 16px; margin-top: 8px; max-width: 60ch; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px;
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-faint);
+  }
+  .meta-row b { color: var(--ink-soft); font-weight: 500; }
+
+  /* ---- nav ---- */
+  nav.toc {
+    display: flex; flex-wrap: wrap; gap: 4px 2px;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--rule);
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px;
+    position: sticky; top: env(safe-area-inset-top, 0px);
+    background: var(--paper); z-index: 5;
+  }
+  nav.toc a {
+    color: var(--ink-soft); text-decoration: none; padding: 5px 9px;
+    border-radius: 5px; white-space: nowrap;
+  }
+  nav.toc a:hover { background: var(--jade-soft); color: var(--jade); }
+
+  section { padding-block: 40px; border-bottom: 1px solid var(--rule); scroll-margin-top: 52px; }
+  section:last-of-type { border-bottom: none; }
+  .tag {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--jade);
+    letter-spacing: 0.06em;
+  }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
+  .sec-head h2 { font-size: 24px; font-weight: 600; }
+
+  p { margin: 0 0 12px; max-width: 68ch; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ---- summary tiles ---- */
+  .tiles {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px; margin-bottom: 22px;
+  }
+  .tile {
+    background: var(--paper-raised); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .tile .num { font-family: "Fraunces", serif; font-size: 26px; font-weight: 600; color: var(--jade); }
+  .tile .lbl { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+
+  .verdict {
+    background: var(--jade-soft); border: 1px solid color-mix(in srgb, var(--jade) 30%, transparent);
+    border-radius: 10px; padding: 16px 18px; margin-top: 4px;
+  }
+  .verdict b { color: var(--jade); }
+
+  /* ---- personas ---- */
+  .personas { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .persona {
+    background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 18px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .persona .pnum { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); }
+  .persona h3 { font-size: 18px; }
+  .persona .age { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-faint); }
+  .persona p { font-size: 14px; color: var(--ink-soft); margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .chip {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px; background: var(--jade-soft);
+    color: var(--jade); border-radius: 5px; padding: 3px 7px;
+  }
+
+  /* ---- table ---- */
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); background: var(--paper-raised); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.price { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td .src { font-size: 11px; color: var(--ink-faint); }
+  .unknown { color: var(--amber); font-style: italic; }
+
+  /* ---- chart ---- */
+  .chart { background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 18px 14px; }
+  .chart-row { display: grid; grid-template-columns: 160px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .chart-row .lbl { font-size: 12.5px; color: var(--ink-soft); }
+  .chart-row .lbl .src { display: block; font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--ink-faint); }
+  .track { position: relative; height: 18px; background: linear-gradient(90deg, var(--rule) 1px, transparent 1px); background-size: calc(100%/5.2) 100%; border-radius: 3px; }
+  .bar { position: absolute; top: 3px; height: 12px; border-radius: 6px; background: var(--ink-faint); opacity: 0.5; }
+  .bar.ours { background: var(--jade); opacity: 0.85; }
+  .dot { position: absolute; top: 1px; width: 3px; height: 16px; border-radius: 2px; background: var(--ink-soft); }
+  .dot.ours { background: var(--jade); }
+  .median-tick { position: absolute; top: -3px; width: 2px; height: 24px; background: var(--amber); }
+  .divider-row { grid-column: 1 / -1; border-top: 1px dashed var(--rule); margin: 4px 0 8px; padding-top: 8px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+  .axis-row { display: grid; grid-template-columns: 160px 1fr; margin-top: 4px; }
+  .axis { position: relative; height: 16px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--ink-faint); }
+  .axis span { position: absolute; transform: translateX(-50%); }
+  .chart-note { font-size: 12px; color: var(--ink-faint); margin-top: 12px; }
+
+  /* ---- timeline ---- */
+  .timeline { display: flex; flex-direction: column; gap: 0; border-left: 2px solid var(--rule); padding-left: 18px; margin-left: 4px; }
+  .tl-item { position: relative; padding-bottom: 20px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: ""; position: absolute; left: -23px; top: 4px; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--jade); border: 2px solid var(--paper);
+  }
+  .tl-date { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--jade); font-weight: 500; }
+  .tl-item h4 { font-family: "Public Sans", sans-serif; font-size: 15px; font-weight: 600; margin: 2px 0 4px; }
+  .tl-item p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* ---- launch courses ---- */
+  .launches { display: flex; flex-direction: column; gap: 12px; }
+  .launch {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 6px 16px;
+    background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px;
+  }
+  .launch .rank {
+    font-family: "Fraunces", serif; font-size: 22px; color: var(--jade); font-weight: 600;
+    grid-row: 1 / 3; align-self: center; width: 30px;
+  }
+  .launch h4 { font-size: 16px; font-weight: 600; grid-column: 2; }
+  .launch .specs { grid-column: 3; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-faint); text-align: right; white-space: nowrap; }
+  .launch p { grid-column: 2 / -1; font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* ---- risks ---- */
+  .risks { display: flex; flex-direction: column; gap: 12px; }
+  .risk {
+    background: var(--risk-soft); border: 1px solid color-mix(in srgb, var(--risk) 30%, transparent);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .risk-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .sev { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; background: var(--risk); color: var(--paper-raised); padding: 2px 8px; border-radius: 999px; }
+  .risk h4 { font-size: 15.5px; font-family: "Public Sans", sans-serif; font-weight: 600; }
+  .risk p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* ---- sources ---- */
+  ol.sources { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  ol.sources li { display: flex; gap: 10px; font-size: 13px; }
+  ol.sources .snum { font-family: "IBM Plex Mono", monospace; color: var(--jade); flex: none; width: 22px; }
+  ol.sources .sbody span { color: var(--ink-faint); font-size: 12px; }
+
+  footer { padding-block: 24px 40px; text-align: center; font-size: 12px; color: var(--ink-faint); }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..700;1,400..600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<div class="wrap">
+
+  <header>
+    <span class="confid">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      Private — invited viewers only
+    </span>
+    <h1>Cook &amp; Bake — Market Validation</h1>
+    <p class="subtitle">A pressure-test of the launch catalogue against Singapore's hands-on cooking &amp; baking market, before committing spend to a website.</p>
+    <div class="meta-row">
+      <span><b>Prepared for</b> Cook &amp; Bake Academy Singapore</span>
+      <span><b>Date</b> 24 Sep 2026</span>
+      <span><b>Catalogue</b> 20 courses · S$160–1,580 · Orchard Road &amp; Bukit Timah</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#summary">Summary</a>
+    <a href="#personas">Personas</a>
+    <a href="#competitors">Competitors</a>
+    <a href="#pricing">Fees vs. market</a>
+    <a href="#demand">Demand &amp; seasonality</a>
+    <a href="#launch">Launch five</a>
+    <a href="#risks">Risks</a>
+    <a href="#sources">Sources</a>
+  </nav>
+
+  <section id="summary">
+    <div class="sec-head"><span class="tag">01</span><h2>Summary</h2></div>
+    <div class="tiles">
+      <div class="tile"><div class="num">6</div><div class="lbl">named competitors verified, plus the corporate team-building segment</div></div>
+      <div class="tile"><div class="num">S$160–245</div><div class="lbl">our per-session-equivalent price range, vs. a S$90–250 market</div></div>
+      <div class="tile"><div class="num">0 / 20</div><div class="lbl">courses currently target the Chinese New Year gifting window</div></div>
+      <div class="tile"><div class="num">1</div><div class="lbl">unverified assumption the launch depends on</div></div>
+    </div>
+    <div class="verdict">
+      <p>Singapore's hands-on cooking and baking market is real and active — but it is a <b>single-session market</b>: 2–4 hour classes priced roughly S$90–250 dominate every roundup and studio found <a href="#s1">[1]</a><a href="#s2">[2]</a><a href="#s3">[3]</a>. Cook &amp; Bake's core bet is structured 1–8 week progressions, a format almost no competitor runs at scale — only two studios found offer anything past a single day <a href="#s3">[3]</a>. Our per-session-equivalent pricing (S$160–245, from catalogue fee ÷ session count) sits at the upper edge of that market, which is defensible if buyers value the structured, skill-ladder format. What public sources cannot answer is whether Singapore buyers will actually commit to weekly attendance across 2–8 weeks at these prices — that is the one question this report leaves open, and the one a real market-research step (landing page waitlist or intent survey) should close before the website build.</p>
+    </div>
+  </section>
+
+  <section id="personas">
+    <div class="sec-head"><span class="tag">02</span><h2>Who is likely to pay</h2></div>
+    <div class="personas">
+      <div class="persona">
+        <span class="pnum">Persona 1</span>
+        <h3>The Skill-Ladder Hobbyist</h3>
+        <span class="age">28–45 · working professional</span>
+        <p>Treats cooking as a structured hobby to progress in, the way others treat a fitness programme — wants technique, not just a recipe, and will pay for a multi-session arc that ends in a real skill.</p>
+        <p style="font-size:12.5px">Evidence: several Singapore studios now run SkillsFuture/WSQ-subsidised <i>multi-session</i> programmes — Grá Baking Academy, BELLS Baking Studio's 8-day workshops, Pots &amp; Pans — signalling real demand for credentialed, structured hobby learning <a href="#s3">[3]</a>.</p>
+        <div class="chips"><span class="chip">BAK-102</span><span class="chip">BAK-103</span><span class="chip">CUL-204</span></div>
+      </div>
+      <div class="persona">
+        <span class="pnum">Persona 2</span>
+        <h3>The Experience Gifter</h3>
+        <span class="age">25–38 · buying for a date, gift, or self-treat</span>
+        <p>Books a single low-commitment session as a birthday gift, date-night activity, or one-off indulgence — price-sensitive on time, not on money.</p>
+        <p style="font-size:12.5px">Evidence: cooking and baking workshops appear repeatedly in Singapore "date ideas" and "creative workshop" roundups as a distinct experience-gifting category, not just a class <a href="#s9">[9]</a><a href="#s8">[8]</a>.</p>
+        <div class="chips"><span class="chip">BAK-106</span><span class="chip">BAK-108</span><span class="chip">CUL-210</span></div>
+      </div>
+      <div class="persona">
+        <span class="pnum">Persona 3</span>
+        <h3>The Team-Bonding Buyer</h3>
+        <span class="age">HR / office manager, booking for 10–70 pax</span>
+        <p>Books on behalf of a company for an offsite or appreciation event — a distinct B2B channel with a higher per-booking value than any single consumer sale.</p>
+        <p style="font-size:12.5px">Evidence: at least seven dedicated cooking team-building providers operate in Singapore, charging S$80–150 per person for a 2–3 hour session <a href="#s4">[4]</a>.</p>
+        <div class="chips"><span class="chip">CUL-205</span><span class="chip">CUL-209</span><span class="chip">CUL-210</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="competitors">
+    <div class="sec-head"><span class="tag">03</span><h2>Named competitors</h2></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Studio</th><th>Course types</th><th>Price range</th><th>Format</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Coriander Leaf</b></td>
+            <td>Asian home-cooking — Singaporean, Thai, Vietnamese, Indian, Lebanese</td>
+            <td class="price">S$160–165 <span class="src">/ session</span></td>
+            <td>Single session, ~3hr <span class="src"><a href="#s1">[1]</a><a href="#s8">[8]</a></span></td>
+          </tr>
+          <tr>
+            <td><b>Palate Sensations Culinary School</b></td>
+            <td>Cooking + baking, SkillsFuture-eligible, corporate team-building</td>
+            <td class="price">S$128–250 <span class="src">/ session</span></td>
+            <td>Single session, 2–4hr <span class="src"><a href="#s1">[1]</a><a href="#s2">[2]</a></span></td>
+          </tr>
+          <tr>
+            <td><b>ABC Cooking Studio</b></td>
+            <td>Cooking, bread, cake — membership-based</td>
+            <td class="price">~S$91 <span class="src">/ lesson</span> + membership <span class="unknown">(fee UNKNOWN)</span></td>
+            <td>Package of 8 / 16 / 24 lessons <span class="src"><a href="#s1">[1]</a><a href="#s3">[3]</a></span></td>
+          </tr>
+          <tr>
+            <td><b>Baker's Brew Studio</b></td>
+            <td>Adult baking — cakes, pastry, bread</td>
+            <td class="price">from S$108–128 <span class="src">/ session</span></td>
+            <td>Single day, 3–4hr; multi-day course exists, price <span class="unknown">UNKNOWN</span> <span class="src"><a href="#s2">[2]</a><a href="#s3">[3]</a></span></td>
+          </tr>
+          <tr>
+            <td><b>Grá Baking Academy</b></td>
+            <td>Sourdough, French pastry, SkillsFuture/WSQ-subsidised</td>
+            <td class="price">from S$170 <span class="src">/ session</span></td>
+            <td>Single session, ~4hr <span class="src"><a href="#s2">[2]</a><a href="#s3">[3]</a></span></td>
+          </tr>
+          <tr>
+            <td><b>At-Sunrice GlobalChef Academy</b></td>
+            <td>Professional WSQ diploma &amp; continuing-education modules</td>
+            <td class="price unknown">UNKNOWN <span class="src">(not published)</span></td>
+            <td>Multi-week / month, professional-track — not a direct hobbyist comparable <span class="src"><a href="#s5">[5]</a></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="chart-note" style="margin-top:14px">Separately, seven dedicated <b>corporate team-building</b> cooking providers (Commune Kitchen, Food Playground, D'Open Kitchen, ToTT, Palate Sensations, Kitchen Showdown, Creative Culinaire) charge S$80–150 per person for a 2–3 hour session <a href="#s4">[4]</a> — a distinct B2B price band, not a direct comparable for our per-seat consumer fees.</p>
+  </section>
+
+  <section id="pricing">
+    <div class="sec-head"><span class="tag">04</span><h2>Our fees against the market</h2></div>
+    <p>Every course in the catalogue meets weekly for its stated duration, so dividing fee by session count gives a figure comparable to competitors' per-session pricing — the closest apples-to-apples cut the data allows. Actual competitor session lengths vary 2–4 hours against our ~3–4 hours, so treat this as directional, not exact.</p>
+    <div class="chart">
+      <div class="chart-row"><div class="lbl">Corporate team-building<span class="src"><a href="#s4">[4]</a></span></div><div class="track"><div class="bar" style="left:30.8%;width:26.9%"></div></div></div>
+      <div class="chart-row"><div class="lbl">ABC Cooking Studio<span class="src"><a href="#s1">[1]</a></span></div><div class="track"><div class="dot" style="left:35.0%"></div></div></div>
+      <div class="chart-row"><div class="lbl">Baker's Brew Studio<span class="src"><a href="#s2">[2]</a><a href="#s3">[3]</a></span></div><div class="track"><div class="bar" style="left:41.5%;width:7.7%"></div></div></div>
+      <div class="chart-row"><div class="lbl">Coriander Leaf<span class="src"><a href="#s1">[1]</a></span></div><div class="track"><div class="bar" style="left:61.5%;width:1.9%"></div></div></div>
+      <div class="chart-row"><div class="lbl">Grá Baking Academy<span class="src"><a href="#s2">[2]</a></span></div><div class="track"><div class="dot" style="left:65.4%"></div></div></div>
+      <div class="chart-row"><div class="lbl">Palate Sensations<span class="src"><a href="#s1">[1]</a><a href="#s2">[2]</a></span></div><div class="track"><div class="bar" style="left:49.2%;width:46.9%"></div></div></div>
+      <div class="divider-row">Cook &amp; Bake Academy — per session equivalent [10]</div>
+      <div class="chart-row"><div class="lbl">Our Bakery courses<span class="src">10 courses, Orchard Rd</span></div><div class="track"><div class="bar ours" style="left:61.5%;width:23.1%"></div><div class="median-tick" style="left:71.2%"></div></div></div>
+      <div class="chart-row"><div class="lbl">Our Cooking courses<span class="src">10 courses, Bukit Timah</span></div><div class="track"><div class="bar ours" style="left:61.5%;width:32.7%"></div><div class="median-tick" style="left:70.4%"></div></div></div>
+      <div class="axis-row"><div></div><div class="axis">
+        <span style="left:0%">S$0</span><span style="left:19.2%">50</span><span style="left:38.5%">100</span><span style="left:57.7%">150</span><span style="left:76.9%">200</span><span style="left:96.2%">250</span>
+      </div></div>
+      <p class="chart-note">Amber ticks mark our median per-session price in each category (Bakery S$185, Cooking S$183). Bars show min–max; dots mark a single published price.</p>
+    </div>
+    <p style="margin-top:16px">Reading it: our per-session range (S$160–245) sits above most single-session studios found (S$91–170) and inside Palate Sensations' upper band (up to S$250), and CUL-203 Sushi &amp; Sashimi is our single most expensive session-equivalent at S$245 — close to the top of the entire market. That premium position is defensible on format (a 2–8 week progression vs. a drop-in class) but it also means we're not the cheapest way for a first-timer to try the category — the entry-price courses (BAK-108, CUL-210, both S$160–180 for a single session) matter for that reason.</p>
+  </section>
+
+  <section id="demand">
+    <div class="sec-head"><span class="tag">05</span><h2>Demand &amp; seasonality</h2></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="tl-date">6–20 Oct 2026</span>
+        <h4>First intake wave — clear of school holidays</h4>
+        <p>Falls after the Sept school break and well before year-end holidays <a href="#s7">[7]</a> — a clean launch window with no competing family-calendar pull.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">21 Nov – 31 Dec 2026</span>
+        <h4>MOE year-end holidays (41 days) + Christmas</h4>
+        <p>Matches most of our December intakes. This is the natural window for the gifting persona and the ages-12+ courses (Cupcake &amp; Cake Pops, Cookie Baking) <a href="#s7">[7]</a>.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">6–7 Feb 2027</span>
+        <h4>Chinese New Year — currently unaddressed</h4>
+        <p>CNY goodie demand (pineapple tarts, bak kwa-style bakes) typically peaks in the 4–6 weeks prior <a href="#s6">[6]</a>. None of the 20 courses have an intake or curriculum in the mid-December to late-January window aimed at this — a catalogue gap, not a launch blocker.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">30 May – 28 Jun 2026 &amp; 2027</span>
+        <h4>Mid-year school holidays (30 days)</h4>
+        <p>A second family/teen window for the ages-12+ workshops. Current intakes don't reach this far — worth an intake for the next planning cycle <a href="#s7">[7]</a>.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-date">Year-round</span>
+        <h4>Corporate bookings — no confirmed seasonality</h4>
+        <p>Sources describe steady demand for team-building cooking sessions with no stated seasonal pattern; some providers anecdotally note a Q4 pickup around year-end appreciation events, but a magnitude figure is <span class="unknown">UNKNOWN</span> <a href="#s4">[4]</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="launch">
+    <div class="sec-head"><span class="tag">06</span><h2>The five to launch first</h2></div>
+    <p>Chosen for breadth across all three personas, a low-commitment entry point into the format Singapore's market doesn't already sell, and coverage of both campuses — deliberately deferring the premium multi-week anchors (French Pastry, Wedding Cake, French Culinary Foundations) to a second wave once initial demand is confirmed.</p>
+    <div class="launches">
+      <div class="launch">
+        <span class="rank">1</span>
+        <h4>CUL-210 · Knife Skills &amp; Kitchen Essentials</h4>
+        <span class="specs">S$160 · 1 wk · Bukit Timah</span>
+        <p>The lowest-friction trial product in the catalogue — a single session that converts into every other course. Fits the Hobbyist as a first step and the Gifter as a low-risk present.</p>
+      </div>
+      <div class="launch">
+        <span class="rank">2</span>
+        <h4>BAK-108 · Cookie &amp; Biscuit Baking</h4>
+        <span class="specs">S$180 · 1 wk · Orchard Road</span>
+        <p>Single-session, gift-ready, and timed to land inside the Nov–Dec holiday window where competitor studios already run seasonal cookie/gingerbread specials <a href="#s2">[2]</a>.</p>
+      </div>
+      <div class="launch">
+        <span class="rank">3</span>
+        <h4>BAK-101 · Artisan Sourdough Bread Baking</h4>
+        <span class="specs">S$680 · 4 wks · Orchard Road</span>
+        <p>The clearest structured-format signature course: bread/sourdough appears across nearly every competitor roundup found, but almost always as a single session — our 4-week arc is a genuine point of difference for the Skill-Ladder Hobbyist <a href="#s3">[3]</a>.</p>
+      </div>
+      <div class="launch">
+        <span class="rank">4</span>
+        <h4>CUL-202 · Thai Street Food Cooking</h4>
+        <span class="specs">S$540 · 3 wks · Bukit Timah</span>
+        <p>Broadly popular cuisine category in the competitive set, mid-priced, and works equally as a hobbyist course or a group/date-night booking.</p>
+      </div>
+      <div class="launch">
+        <span class="rank">5</span>
+        <h4>CUL-209 · Grilling &amp; BBQ Mastery</h4>
+        <span class="specs">S$460 · 2 wks · Bukit Timah</span>
+        <p>Social, weekend-evening format that few structured-course competitors offer — team-building providers sell one-off grilling sessions, not a technique course. Strong fit for the Team-Bonding buyer and friend-group bookings alike <a href="#s4">[4]</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="risks">
+    <div class="sec-head"><span class="tag">07</span><h2>Risks</h2></div>
+    <div class="risks">
+      <div class="risk">
+        <div class="risk-head"><span class="sev">Unverified</span><h4>Multi-week commitment is a novel ask</h4></div>
+        <p>The market we found is built on single 2–4 hour sessions <a href="#s1">[1]</a><a href="#s2">[2]</a><a href="#s3">[3]</a>. Whether Singapore buyers will commit to 2–8 weekly sessions at S$160–1,580 is not answered by any public source — it needs a direct demand test before the website spend.</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head"><span class="sev">Internal calc</span><h4>Thin margin below ~70% fill</h4></div>
+        <p>At 12 seats, BAK-101 (4 sessions, S$680) grosses S$8,160 per cohort before instructor, ingredients, campus overhead. A single under-filled cohort swings the unit economics fast — worth modelling against actual cost inputs before pricing is finalised.</p>
+      </div>
+      <div class="risk">
+        <div class="risk-head"><span class="sev">Missing input</span><h4>Two campuses, fixed cost from day one</h4></div>
+        <p>No public source gives typical Singapore culinary-studio rent per square foot, so a realistic breakeven fill rate for Orchard Road and Bukit Timah is <span class="unknown">UNKNOWN</span> pending an actual lease-cost figure from the founder.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sources">
+    <div class="sec-head"><span class="tag">08</span><h2>Sources</h2></div>
+    <ol class="sources">
+      <li id="s1"><span class="snum">[1]</span><span class="sbody">AvenueOne — "13 places for cooking lessons in Singapore to up your kitchen game." <a href="https://avenueone.sg/going-out/cooking-lessons-singapore/" target="_blank" rel="noopener">avenueone.sg</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s2"><span class="snum">[2]</span><span class="sbody">SingSaver — "Baking Classes in Singapore: Cake Decorating, SkillsFuture Courses." <a href="https://www.singsaver.com.sg/blog/baking-classes-singapore" target="_blank" rel="noopener">singsaver.com.sg</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s3"><span class="snum">[3]</span><span class="sbody">SethLui.com — "10 baking and cooking classes in Singapore for every culinary enthusiast." <a href="https://sethlui.com/best-baking-cooking-class-guide-singapore/" target="_blank" rel="noopener">sethlui.com</a> <span>· published 22 Jan 2026, accessed 24 Sep 2026</span></span></li>
+      <li id="s4"><span class="snum">[4]</span><span class="sbody">Terris — "7 Best Cooking Team Building Providers in Singapore (August 2026)." <a href="https://terris.sg/blog/best-cooking-team-building-singapore" target="_blank" rel="noopener">terris.sg</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s5"><span class="snum">[5]</span><span class="sbody">At-Sunrice GlobalChef Academy — Continuing Education (Modular / WSQ). <a href="https://at-sunrice.com/professional-programmes/continuing-education-modular-wsq" target="_blank" rel="noopener">at-sunrice.com</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s6"><span class="snum">[6]</span><span class="sbody">Ministry of Manpower, Singapore — "Public Holidays for 2027." <a href="https://www.mom.gov.sg/newsroom/press-releases/2026/0618-public-holidays-for-2027" target="_blank" rel="noopener">mom.gov.sg</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s7"><span class="snum">[7]</span><span class="sbody">heytoshi — "MOE School Calendar 2026 &amp; 2027." <a href="https://heytoshi.com/moe-school-calendar" target="_blank" rel="noopener">heytoshi.com</a>, compiled from MOE's published term dates <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s8"><span class="snum">[8]</span><span class="sbody">Time Out Singapore — "The best cooking classes in Singapore." <a href="https://timeout.com/singapore/things-to-do/the-best-cooking-classes-in-singapore" target="_blank" rel="noopener">timeout.com</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s9"><span class="snum">[9]</span><span class="sbody">Seek Sophie — "36 Unique and Cool Creative Workshops in Singapore [2026]." <a href="https://www.seeksophie.com/magazine/a/39-unique-and-cool-creative-workshops-in-singapore" target="_blank" rel="noopener">seeksophie.com</a> <span>· accessed 24 Sep 2026</span></span></li>
+      <li id="s10"><span class="snum">[10]</span><span class="sbody">Cook &amp; Bake Academy internal catalogue — <span class="mono">courses.json</span>, provided by the founder <span>· 24 Sep 2026</span></span></li>
+    </ol>
+  </section>
+
+  <footer>Cook &amp; Bake Academy Singapore · Market Validation · Prepared 24 Sep 2026</footer>
+</div>

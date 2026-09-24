@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cook &amp; Bake Academy — Hands-on cooking &amp; baking classes in Singapore</title>
+<meta name="description" content="Structured cooking and baking courses across two Singapore campuses. Classes of twelve, taught by working chefs.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">Cook &amp; Bake <span>Academy</span></a>
+    <nav aria-label="Primary">
+      <a href="#courses">Courses</a>
+      <a href="#campuses">Campuses</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="top" aria-labelledby="hero-heading">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <h1 id="hero-heading">Skills that outlast a single class.</h1>
+        <p class="hero-pitch">Hands-on cooking and baking courses across two campuses, taught in groups of twelve so you actually get help.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#courses">Browse courses</a>
+          <button class="btn btn-secondary" type="button" id="open-assistant" aria-haspopup="dialog" aria-controls="assistant-dialog">Ask our course assistant</button>
+        </div>
+      </div>
+      <div class="hero-collage" aria-hidden="true">
+        <img class="tall" src="https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="" loading="eager">
+        <img class="top" src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="" loading="eager">
+        <img class="bottom" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="" loading="eager">
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section class="courses" id="courses" aria-labelledby="courses-heading">
+    <div class="wrap">
+      <h2 id="courses-heading">Courses</h2>
+      <p class="section-intro">Every course runs at one of our two campuses, in groups of twelve. Fees below are shown exactly as published — nothing here is rounded or estimated.</p>
+
+      <div class="controls">
+        <div class="chips" role="group" aria-label="Filter courses by category">
+          <button type="button" class="chip is-active" data-filter="All" aria-pressed="true">All</button>
+          <button type="button" class="chip" data-filter="Bakery" aria-pressed="false">Bakery</button>
+          <button type="button" class="chip" data-filter="Cooking" aria-pressed="false">Cooking</button>
+        </div>
+        <div class="search-field">
+          <label for="course-search">Search courses</label>
+          <input type="search" id="course-search" placeholder="Try “sourdough”, “knife”, “Saturday”…" autocomplete="off">
+        </div>
+      </div>
+
+      <p class="result-count" id="result-count" role="status" aria-live="polite"></p>
+
+      <div class="course-grid" id="course-grid" aria-live="polite"></div>
+      <p class="no-results" id="no-results" hidden>No courses match that search. Try a different word, or clear the filter.</p>
+    </div>
+  </section>
+
+  <!-- CAMPUSES -->
+  <section class="campuses" id="campuses" aria-labelledby="campuses-heading">
+    <div class="wrap">
+      <h2 id="campuses-heading">Campuses</h2>
+      <div class="campus-grid">
+        <article class="campus-card">
+          <h3>Orchard Road</h3>
+          <p class="campus-focus">Bakery courses</p>
+          <p>Ovens, proofing cabinets and a chocolate room, built for bread, pastry and cake work.</p>
+        </article>
+        <article class="campus-card">
+          <h3>Bukit Timah</h3>
+          <p class="campus-focus">Cooking courses</p>
+          <p>Woks, grills and a full pantry of regional ingredients, built for stovetop and live-fire work.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq" aria-labelledby="faq-heading">
+    <div class="wrap">
+      <h2 id="faq-heading">FAQ</h2>
+      <div class="faq-list" id="faq-list">
+        <p class="faq-empty">We're still writing these up. If you have a question about allergies, parking or anything else, ask the course assistant above.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Cook &amp; Bake Academy · Orchard Road &amp; Bukit Timah, Singapore · <a href="admin.html">Staff sign-up admin</a></p>
+  </div>
+</footer>
+
+<!-- COURSE ASSISTANT DIALOG -->
+<div class="dialog-backdrop" id="assistant-backdrop" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="assistant-title" id="assistant-dialog">
+    <div class="dialog-head">
+      <h2 id="assistant-title">Course assistant</h2>
+      <button type="button" class="dialog-close" id="close-assistant" aria-label="Close course assistant">×</button>
+    </div>
+    <p class="dialog-hint">Search by cuisine, ingredient, allergen or day. This looks through our course list — it isn't a live chat.</p>
+    <label for="assistant-input">Ask a question</label>
+    <input type="text" id="assistant-input" placeholder="Try “gluten free”, “wedding cake”, “Saturday morning”…">
+    <div class="assistant-results" id="assistant-results" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<template id="card-template">
+  <article class="course-card">
+    <img class="course-photo" alt="">
+    <div class="course-body">
+      <div class="course-tags">
+        <span class="course-code"></span>
+        <span class="course-level"></span>
+        <span class="course-campus"></span>
+      </div>
+      <h3 class="course-title"></h3>
+      <p class="course-summary"></p>
+      <dl class="course-meta">
+        <div><dt>Weeks</dt><dd class="course-weeks"></dd></div>
+        <div><dt>Schedule</dt><dd class="course-schedule"></dd></div>
+        <div><dt>Fee</dt><dd class="course-fee"></dd></div>
+      </dl>
+      <button type="button" class="btn btn-primary btn-signup course-signup-btn">Sign up</button>
+    </div>
+  </article>
+</template>
+
+<!-- SIGN-UP DIALOG (shared by every course card) -->
+<dialog id="signup-dialog" aria-labelledby="signup-title">
+  <form id="signup-form" novalidate>
+    <div class="dialog-head">
+      <h2 id="signup-title">Sign up</h2>
+      <button type="button" class="dialog-close" id="signup-close" aria-label="Close sign-up form">×</button>
+    </div>
+
+    <dl class="signup-course" id="signup-course-summary">
+      <div><dt>Course</dt><dd id="sc-code-title"></dd></div>
+      <div><dt>Campus</dt><dd id="sc-campus"></dd></div>
+      <div><dt>Schedule</dt><dd id="sc-schedule"></dd></div>
+      <div><dt>Weeks</dt><dd id="sc-weeks"></dd></div>
+      <div><dt>Fee</dt><dd id="sc-fee"></dd></div>
+    </dl>
+
+    <div class="field">
+      <label for="signup-intake">Intake</label>
+      <select id="signup-intake" name="intake" required></select>
+    </div>
+
+    <div class="field">
+      <label for="signup-name">Full name</label>
+      <input id="signup-name" name="fullName" type="text" required minlength="2" autocomplete="name" aria-describedby="err-name">
+      <p class="field-error" id="err-name" hidden></p>
+    </div>
+
+    <div class="field">
+      <label for="signup-email">Email</label>
+      <input id="signup-email" name="email" type="email" required autocomplete="email" aria-describedby="err-email">
+      <p class="field-error" id="err-email" hidden></p>
+    </div>
+
+    <div class="field">
+      <label for="signup-mobile">Mobile</label>
+      <input id="signup-mobile" name="mobile" type="tel" required autocomplete="tel" placeholder="+65 9123 4567" aria-describedby="hint-mobile err-mobile">
+      <p class="field-hint" id="hint-mobile">Singapore mobile — starts with 6, 8 or 9. E.g. +65 9123 4567 or 91234567.</p>
+      <p class="field-error" id="err-mobile" hidden></p>
+    </div>
+
+    <div class="field">
+      <label for="signup-experience">Experience</label>
+      <select id="signup-experience" name="experience">
+        <option value="None">None</option>
+        <option value="Some">Some</option>
+        <option value="Confident">Confident</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="signup-allergies">Allergies</label>
+      <textarea id="signup-allergies" name="allergies" rows="2" aria-describedby="warn-allergies" placeholder="Optional — let us know about any allergies"></textarea>
+      <p class="field-warning" id="warn-allergies" hidden></p>
+    </div>
+
+    <div class="field field-checkbox">
+      <input type="checkbox" id="signup-consent" name="consent" required aria-describedby="err-consent">
+      <label for="signup-consent">I agree to be contacted about this sign-up. <span class="req">Required</span></label>
+    </div>
+    <p class="field-error" id="err-consent" hidden></p>
+
+    <div class="field field-checkbox">
+      <input type="checkbox" id="signup-newsletter" name="newsletter">
+      <label for="signup-newsletter">Send me offers and course updates by email.</label>
+    </div>
+
+    <div class="signup-actions">
+      <button type="submit" class="btn btn-primary">Sign up</button>
+      <button type="button" class="btn btn-secondary" id="signup-cancel">Cancel</button>
+    </div>
+  </form>
+
+  <div class="signup-success" id="signup-success" hidden>
+    <h2>You're signed up</h2>
+    <p>Reference number</p>
+    <p class="success-ref" id="success-ref"></p>
+    <p>We've saved your sign-up on this device. Send yourself a copy by email, or use it to reach us if you need to make changes:</p>
+    <a class="btn btn-primary" id="success-mailto" href="#">Email enrol@cookbakeacademy.sg</a>
+    <button type="button" class="btn btn-secondary" id="signup-done">Done</button>
+  </div>
+</dialog>
+
+<script src="script.js"></script>
+</body>
+</html>
