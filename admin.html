@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cook &amp; Bake Academy — Sign-up admin</title>
+<meta name="description" content="Sign-ups saved on this device, with a CSV export.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">Cook &amp; Bake <span>Academy</span></a>
+    <nav aria-label="Primary">
+      <a href="index.html">Back to site</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="courses">
+    <div class="wrap">
+      <h2>Sign-up admin</h2>
+      <p class="section-intro">Sign-ups saved by this browser, on this device — there's no server, so nothing here is shared between devices. Export a CSV to back these up or hand them to enrolment.</p>
+
+      <div class="admin-toolbar">
+        <button type="button" class="btn btn-primary" id="export-csv">Export CSV</button>
+        <span id="admin-count" class="result-count"></span>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="admin-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Submitted</th>
+              <th>Course code</th>
+              <th>Course title</th>
+              <th>Intake</th>
+              <th>Full name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Experience</th>
+              <th>Allergies</th>
+              <th>Marketing opt-in</th>
+              <th>Paid</th>
+            </tr>
+          </thead>
+          <tbody id="admin-body"></tbody>
+        </table>
+      </div>
+      <p class="admin-empty" id="admin-empty" hidden>No sign-ups saved on this device yet. They'll appear here as soon as someone signs up on the main site, in this same browser.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Cook &amp; Bake Academy · Staff admin — not for public access</p>
+  </div>
+</footer>
+
+<script src="admin.js"></script>
+</body>
+</html>
